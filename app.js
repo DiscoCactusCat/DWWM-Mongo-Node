@@ -3,6 +3,18 @@ const mongoose = require("mongoose");
 const URI =
   "mongodb+srv://caroline:caroline@cluster0.gfvqb.mongodb.net/sample_airbnb?retryWrites=true&w=majority";
 
+
+
+  const express = require('express')
+  const app = express()
+  const port = 3000
+ 
+  
+  app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
+
+
 mongoose.connect(URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -46,7 +58,11 @@ const AirbnbReview = new mongoose.Schema({
 const ListingAndReviews = mongoose.model('airbnb', AirbnbReview, 'listingsAndReviews');
 const query = ListingAndReviews.find({name:/^h/, beds: { $gt: 3 }},{name:1, notes:1, description:1}).limit(3);
 
-  query.exec((err, res)=>{
-      console.log("Result of count:", res);
-  })
+  
+
+  app.get('/api', (req, response) => {
+    query.exec((err, result)=>{
+        response.send(result);
+    });
+  });
 console.log("hello");
