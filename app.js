@@ -68,26 +68,43 @@ const ListingAndReviews = mongoose.model(
 //   { name: 1, notes: 1, description: 1 }
 // );
 
-const baseQuery = ListingAndReviews.find(
-  {},
-  { name: 1, notes: 1, description: 1 }
-);
+
 
 app.get("/api", (req, response) => {
-    
+  var limitInput = 100;
+  var nameInput;
   // Case with a limit param in query
   if (req.query.limit) {
-    var limit = parseInt(req.query.limit);
-    const queryLimit = baseQuery.limit(limit);
-
-    queryLimit.exec((err, result) => {
-      response.send(result);
-    });
-
-    // Default case
-  } else {
-    baseQuery.exec((err, result) => {
-      response.send(result);
-    });
+    limitInput = parseInt(req.query.limit);
   }
+    // Default case
+   if (req.query.name) {
+    nameInput = new RegExp(req.query.name);
+    console.log(nameInput);
+   }
+
+ 
+   if(nameInput!==""){
+    const userQuery = ListingAndReviews.find(
+        { name: nameInput },
+        { name: 1, notes: 1, description: 1 }
+      )
+        .sort({ _id: 1 })
+        .limit(limitInput);
+    
+        userQuery.exec((err, result) => {
+        response.send(result);
+      });
+   }else{
+    const userQuery = ListingAndReviews.find(
+        { },
+        { name: 1, notes: 1, description: 1 }
+      )
+        .sort({ _id: 1 })
+        .limit(limitInput);
+    
+        userQuery.exec((err, result) => {
+        response.send(result);
+      });
+   }
 });
