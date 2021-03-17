@@ -72,21 +72,21 @@ const ListingAndReviews = mongoose.model(
 
 app.get("/api", (req, response) => {
   var limitInput = 100;
-  var nameInput;
+  var qInput;
   // Case with a limit param in query
   if (req.query.limit) {
     limitInput = parseInt(req.query.limit);
   }
     // Default case
-   if (req.query.name) {
-    nameInput = new RegExp(req.query.name);
-    console.log(nameInput);
+   if (req.query.q) {
+    qInput = new RegExp(req.query.q);
+    console.log(qInput);
    }
 
  
-   if(nameInput!==""){
+   if(qInput!==""){
     const userQuery = ListingAndReviews.find(
-        { name: nameInput },
+        { $or: [{name: qInput},{description: qInput}] },
         { name: 1, notes: 1, description: 1 }
       )
         .sort({ _id: 1 })
