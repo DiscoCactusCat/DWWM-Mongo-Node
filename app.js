@@ -67,10 +67,32 @@ const ListingAndReviews = mongoose.model(
 //   { name: /^h/, beds: { $gt: 3 } },
 //   { name: 1, notes: 1, description: 1 }
 // );
-
-
+const requestSchema = new mongoose.Schema({
+  rawHeaders: Array,
+  url: String,
+  query: Object,
+  date: {
+    type: Date,
+    default: Date.now,
+  }
+});
+const requestModel = mongoose.model(
+  "request",
+  requestSchema,
+  "requestsFromUsers"
+);
 
 app.get("/api", (req, response) => {
+   
+
+  let newRequest = new requestModel(req);
+  newRequest.save();
+
+  console.log("REQUEST HEADER", req.rawHeaders);
+  console.log("REQUEST URL", req.url);
+  console.log("REQUEST QUERY", req.query);
+  console.log("REQUEST DATE", new Date());
+
   var limitInput = 100;
   var qInput = "";
   var userQuery;
