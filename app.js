@@ -86,12 +86,12 @@ app.get("/api", (req, response) => {
    
 
   let newRequest = new requestModel(req);
-  newRequest.save();
+  newRequest.save( (err, data)=>{
+    if(err) console.log("Error", err);
+    console.log("Request saved", data);
+  });
 
-  console.log("REQUEST HEADER", req.rawHeaders);
-  console.log("REQUEST URL", req.url);
-  console.log("REQUEST QUERY", req.query);
-  console.log("REQUEST DATE", new Date());
+  
 
   var limitInput = 100;
   var qInput = "";
